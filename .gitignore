@@ -1,0 +1,70 @@
+# Secrets / credentials
+.env
+.env.*
+!.env.example
+!.env.*.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+*.cer
+*.der
+*.kdbx
+*secret*
+*token*
+agent/auth.json
+agent/**/auth.json
+!agent/extensions/web-search/auth.example.json
+
+# Session history / transcripts (may contain private data)
+agent/sessions/
+*.jsonl
+
+# Dependencies / generated package caches
+node_modules/
+agent/**/node_modules/
+.pnpm-store/
+.yarn/cache/
+.yarn/install-state.gz
+.npm/
+
+# Build outputs / caches
+dist/
+build/
+out/
+coverage/
+.cache/
+.tmp/
+tmp/
+temp/
+.DS_Store
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Large/binary archives and dumps
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+*.rar
+*.7z
+*.dmg
+*.iso
+*.sqlite
+*.sqlite3
+*.db
+*.dump
+*.bak
+
+# OS / editor
+.idea/
+.vscode/
+*.swp
+*.swo
