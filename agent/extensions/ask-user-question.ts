@@ -216,6 +216,7 @@ async function askSingleChoice(
 		let optionIndex = 0;
 		let editMode = false;
 		let cachedLines: string[] | undefined;
+		let cachedWidth = -1;
 		const editor = new Editor(tui, createEditorTheme(theme));
 
 		editor.onSubmit = (value) => {
@@ -274,7 +275,11 @@ async function askSingleChoice(
 		}
 
 		function render(width: number): string[] {
-			if (cachedLines) return cachedLines;
+			// The cache MUST be keyed on width: pi-tui calls requestRender() but NOT
+			// invalidate() on terminal resize, so render() can be re-entered with a
+			// new width. Returning stale wider lines trips the TUI width guard and
+			// crashes the process.
+			if (cachedLines && cachedWidth === width) return cachedLines;
 
 			const lines: string[] = [];
 			const add = (text: string) => lines.push(truncateToWidth(text, width));
@@ -314,6 +319,7 @@ async function askSingleChoice(
 
 			add(theme.fg("accent", "─".repeat(width)));
 			cachedLines = lines;
+			cachedWidth = width;
 			return lines;
 		}
 
@@ -350,6 +356,7 @@ async function askMultiChoice(
 		let optionIndex = 0;
 		let editMode = false;
 		let cachedLines: string[] | undefined;
+		let cachedWidth = -1;
 		const selected = new Map<string, AskAnswer>();
 		const editor = new Editor(tui, createEditorTheme(theme));
 
@@ -445,7 +452,11 @@ async function askMultiChoice(
 		}
 
 		function render(width: number): string[] {
-			if (cachedLines) return cachedLines;
+			// The cache MUST be keyed on width: pi-tui calls requestRender() but NOT
+			// invalidate() on terminal resize, so render() can be re-entered with a
+			// new width. Returning stale wider lines trips the TUI width guard and
+			// crashes the process.
+			if (cachedLines && cachedWidth === width) return cachedLines;
 
 			const lines: string[] = [];
 			const add = (text: string) => lines.push(truncateToWidth(text, width));
@@ -513,6 +524,7 @@ async function askMultiChoice(
 
 			add(theme.fg("accent", "─".repeat(width)));
 			cachedLines = lines;
+			cachedWidth = width;
 			return lines;
 		}
 
@@ -526,15 +538,31 @@ async function askMultiChoice(
 	});
 }
 
-// Mutex to serialize concurrent UI interactions.
-// showExtensionCustom/editor can only handle one active call at a time.
-let uiLock: Promise<void> = Promise.resolve();
+// Shared UI mutex. ctx.ui.custom()/editor can only handle one active call at
+// a time, so ALL pop-up-style tools (ask_user_question, quiz, ...) must
+// serialize against each other, not just against themselves. We stash one
+// mutex on globalThis so separate extension files can share it without
+// importing each other.
+const SHARED_UI_LOCK_KEY = "__piSharedUiLock";
+function getSharedUiLock() {
+	const g = globalThis as any;
+	if (!g[SHARED_UI_LOCK_KEY]) {
+		let chain: Promise<void> = Promise.resolve();
+		g[SHARED_UI_LOCK_KEY] = {
+			withLock<T>(fn: () => T | Promise<T>): Promise<T> {
+				const prev = chain;
+				let release: () => void;
+				chain = new Promise<void>((r) => { release = r; });
+				return prev.then(fn).finally(() => release!());
+			},
+		};
+	}
+	return g[SHARED_UI_LOCK_KEY] as { withLock<T>(fn: () => T | Promise<T>): Promise<T> };
+}
+const sharedUiLock = getSharedUiLock();
 
 function withUILock<T>(fn: () => Promise<T>): Promise<T> {
-	const prev = uiLock;
-	let release: () => void;
-	uiLock = new Promise<void>((r) => { release = r; });
-	return prev.then(fn).finally(() => release!());
+	return sharedUiLock.withLock(fn);
 }
 
 export default function askUserQuestion(pi: ExtensionAPI) {

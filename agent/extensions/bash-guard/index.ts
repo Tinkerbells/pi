@@ -392,6 +392,36 @@ const HEADLESS_BLOCKED: Array<{ pattern: RegExp; reason: string }> = [
 	{ pattern: /\bgit\s+gc\b[^#\n]*--prune\b/, reason: "prune unreachable objects (git gc --prune)" },
 ];
 
+// Subset of HEADLESS_BLOCKED used as the hard-block floor when bash-guard is
+// disabled in an interactive (main) session. In the default autonomous mode,
+// routine git operations (commit/pull/push) are allowed
+// through; only truly catastrophic / non-recoverable patterns remain blocked.
+const MAIN_DISABLED_BLOCKED: Array<{ pattern: RegExp; reason: string }> = HEADLESS_BLOCKED.filter(
+	({ pattern }) => {
+		const src = pattern.source;
+		return !(
+			src.includes("git\\s+commit") ||
+			src.includes("git\\s+pull") ||
+			// Keep `git push --force` blocked but allow plain `git push`.
+			src === "\\bgit\\s+push\\b"
+		);
+	},
+);
+
+// Warning shown via ctx.ui.setStatus when bash-guard is disabled. Pi joins all
+// extension statuses on a single line sorted alphabetically by key, so:
+//
+// - Key has a leading space so it sorts before any letter-keyed extension,
+//   guaranteeing the warning stays visible (truncateToWidth chops the right).
+// - We deliberately do NOT pad the text to full width — that would push other
+//   extensions' statuses off-screen via truncation.
+// - Background is truecolor pure red (#FF0000) instead of the basic palette
+//   color 41 (which terminals remap per theme, often appearing brown/orange).
+//   Foreground is truecolor white for high contrast on pure red.
+// - NBSPs (U+00A0) handle intra-warning spacing because the footer's
+//   sanitizeStatusText collapses runs of ASCII spaces via / +/g.
+const BASH_GUARD_STATUS_KEY = " bash-guard";
+
 export default function (pi: ExtensionAPI) {
 	if (_isSubagent) {
 		// Subagent mode: hard-block catastrophic operations, no prompting.
@@ -420,6 +450,48 @@ export default function (pi: ExtensionAPI) {
 		default: false,
 	});
 
+	pi.registerFlag("bash-guard-disabled", {
+		description: "Start the session with bash-guard disabled (default; hard-block floor still applies).",
+		type: "boolean",
+		default: true,
+	});
+
+	// Session-local toggle. Intentionally not persisted across reloads or restarts.
+	let disabled = pi.getFlag("--bash-guard-disabled") !== false;
+
+	pi.on("session_start", async (_event, ctx) => {
+		if (disabled) {
+			const { theme } = ctx.ui;
+			const badge = theme.bg(
+				"toolErrorBg",
+				theme.bold(theme.fg("error", " ⚠ BG OFF ")),
+			);
+			ctx.ui.setStatus(BASH_GUARD_STATUS_KEY, badge);
+		}
+	});
+
+	pi.registerCommand("bash-guard", {
+		description: "Toggle bash-guard between disabled (default) and interactive for this session.",
+		handler: async (_args, ctx) => {
+			disabled = !disabled;
+			if (disabled) {
+				const { theme } = ctx.ui;
+				const badge = theme.bg(
+					"toolErrorBg",
+					theme.bold(theme.fg("error", " ⚠ BG OFF ")),
+				);
+				ctx.ui.setStatus(BASH_GUARD_STATUS_KEY, badge);
+				ctx.ui.notify(
+					"bash-guard DISABLED for this session. Catastrophic operations are still hard-blocked. Run /bash-guard again to re-enable.",
+					"warning",
+				);
+			} else {
+				ctx.ui.setStatus(BASH_GUARD_STATUS_KEY, undefined);
+				ctx.ui.notify("bash-guard re-enabled.", "info");
+			}
+		},
+	});
+
 	// Avoid annoying retry loops: if the exact command was aborted recently, auto-block it.
 	const recentlyAborted = new Map<string, number>();
 	const ABORT_REMEMBER_MS = 60_000;
@@ -428,6 +500,24 @@ export default function (pi: ExtensionAPI) {
 		if (!isToolCallEventType("bash", event)) return;
 
 		const command = event.input.command;
+
+		// Disabled (autonomous) mode: skip interactive prompting entirely, but keep
+		// a hard-block floor for catastrophic operations.
+		if (disabled) {
+			for (const { pattern, reason } of MAIN_DISABLED_BLOCKED) {
+				if (pattern.test(command)) {
+					return {
+						block: true,
+						reason:
+							`Blocked by bash-guard (disabled-mode floor): ${reason}. ` +
+							"Even with bash-guard disabled, this pattern is considered too destructive to run unattended. " +
+							"Re-enable bash-guard with /bash-guard and confirm interactively, or propose a safer alternative.",
+					};
+				}
+			}
+			return;
+		}
+
 		const risk = analyzeBashCommand(command);
 		if (!risk) return;
 

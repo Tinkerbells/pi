@@ -1,9 +1,59 @@
 {
-  "lastChangelogVersion": "0.79.4",
-  "theme": "dark",
-  "defaultProvider": "openai-codex",
-  "defaultModel": "gpt-5.5",
+  "defaultModel": "qwen3.6:latest",
+  "defaultProvider": "ollama",
+  "defaultThinkingLevel": "high",
+  "enabledModels": [
+    "openai-codex/gpt-5.6-sol"
+  ],
+  "lastChangelogVersion": "0.84.3",
+  "subagents": {
+    "defaultModel": "openai-codex/gpt-5.6-luna",
+    "defaultProvider": "openai-codex",
+    "agentOverrides": {
+      "delegate": {
+        "model": "openai-codex/gpt-5.6-luna",
+        "thinking": "max"
+      },
+      "oracle": {
+        "model": "openai-codex/gpt-5.6-sol",
+        "thinking": "high"
+      },
+      "researcher": {
+        "model": "openai-codex/gpt-5.6-luna",
+        "thinking": "max"
+      },
+      "reviewer": {
+        "model": "openai-codex/gpt-5.6-luna",
+        "thinking": "max"
+      },
+      "scout": {
+        "model": "openai-codex/gpt-5.6-luna",
+        "thinking": "low"
+      },
+      "worker": {
+        "model": "openai-codex/gpt-5.6-luna",
+        "thinking": "max"
+      }
+    },
+    "modelScope": {
+      "enforce": true,
+      "strict": true,
+      "allow": [
+        "openai-codex/*"
+      ]
+    }
+  },
   "packages": [
-    "npm:pi-subagents"
-  ]
+    "npm:@houndmcp/hound-mcp-pi",
+    "npm:pi-mcp-adapter@2.15.0",
+    "npm:pi-figma-remote-auth@0.1.1",
+    {
+      "extensions": [],
+      "source": "npm:@ollama/pi-web-search"
+    }
+  ],
+  "skills": [
+    "/Users/tinkerbells/work/tripster/ai-woodman-bot/core/skills"
+  ],
+  "theme": "dark"
 }

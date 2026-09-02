@@ -8,7 +8,13 @@ the session is interactive (main session) or non-interactive (spawned subagent).
 Behaviour is determined at registration time via the `PI_SUBAGENT_DEPTH` environment variable,
 which pi-subagents injects into every spawned process.
 
-### Main session (`PI_SUBAGENT_DEPTH` = 0 or unset) — interactive prompt
+### Main session (`PI_SUBAGENT_DEPTH` = 0 or unset) — disabled by default
+
+By default, bash-guard runs in autonomous mode: it does not prompt for routine commands, but it
+still hard-blocks catastrophic/unrecoverable operations. Run `/bash-guard` to enable interactive
+protection for the current session; run it again to disable it.
+
+When interactive protection is enabled, bash-guard:
 
 - Heuristically detects destructive/questionable commands via shell-aware parsing
 - Prompts for **any** `git ...` command (escalates severity for especially risky ones: `git rm`,
@@ -61,5 +67,6 @@ Auto-discovered from `~/.pi/agent/extensions/bash-guard/`. Run `/reload` in pi.
 ## Notes
 
 - Scope: `bash` tool calls only (`write`/`edit` and user `!` commands are not intercepted).
+- `--bash-guard-disabled` defaults to `true`, so main sessions start in autonomous mode.
 - `--bash-guard-auto-allow`: main-session flag that allows flagged commands when there is no UI
   (e.g. running pi non-interactively). Has no effect in subagent sessions.

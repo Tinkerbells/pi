@@ -16,6 +16,15 @@
 agent/auth.json
 agent/**/auth.json
 !agent/extensions/web-search/auth.example.json
+agent/mcp-cache.json
+agent/mcp-npx-cache.json
+agent/mcp-onboarding.json
+agent/models-store.json
+agent/run-history.jsonl
+agent/trust.json
+agent/git/
+agent/mcp-oauth/
+agent/missions/
 
 # Session history / transcripts (may contain private data)
 agent/sessions/
@@ -24,6 +33,10 @@ agent/sessions/
 # Dependencies / generated package caches
 node_modules/
 agent/**/node_modules/
+.venv/
+agent/**/.venv/
+__pycache__/
+*.py[cod]
 .pnpm-store/
 .yarn/cache/
 .yarn/install-state.gz
