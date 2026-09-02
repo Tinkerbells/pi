@@ -503,6 +503,28 @@ function getShellReadyDelayMs(): number {
   return Number.isFinite(parsed) && parsed >= 0 ? parsed : 500;
 }
 
+/**
+ * Finish a launch script without permanently leaving its pane behind.
+ *
+ * Normally the parent watcher sees the sentinel within one polling interval and
+ * closes the pane itself. That assumption fails if the orchestrator is killed,
+ * crashes, or its extension runtime is reloaded while the watcher is gone: Pi
+ * exits normally, but the shell hosting its launch script remains as an orphan
+ * tmux pane. Schedule a delayed, self-scoped fallback close so an exited child
+ * can never leave a terminal behind indefinitely. The grace period leaves the
+ * watcher enough time to read the sentinel and return the result first.
+ */
+const ORPHAN_PANE_CLOSE_GRACE_SECONDS = 5;
+
+function withCompletionSentinel(command: string, surface: string): string {
+  const escapedSurface = shellEscape(surface);
+  return [
+    `${command}; __subagent_exit=$?; printf '__SUBAGENT_DONE_%s__\\n' "$__subagent_exit"`,
+    `(sleep ${ORPHAN_PANE_CLOSE_GRACE_SECONDS}; tmux kill-pane -t ${escapedSurface} >/dev/null 2>&1) &`,
+    'exit "$__subagent_exit"',
+  ].join("\n");
+}
+
 function muxUnavailableResult() {
   return {
     content: [
@@ -1122,6 +1144,7 @@ function resolveResumeLaunchBehavior(): { autoExit: boolean; interactive: boolea
 export const __test__ = {
   borderLine,
   getShellReadyDelayMs,
+  withCompletionSentinel,
   renderSubagentWidgetLines,
   loadAgentDefaults,
   discoverAgentDefinitions,
@@ -1271,7 +1294,7 @@ async function launchSubagent(
     cmdParts.push(shellEscape(params.task));
 
     const cdPrefix = effectiveCwd ? `cd ${shellEscape(effectiveCwd)} && ` : "";
-    const command = `${cdPrefix}${cmdParts.join(" ")}; echo '__SUBAGENT_DONE_'$?'__'`;
+    const command = withCompletionSentinel(`${cdPrefix}${cmdParts.join(" ")}`, surface);
 
     const launchScriptName = `${(params.name || "subagent")
       .toLowerCase()
@@ -1414,7 +1437,7 @@ async function launchSubagent(
   const cdPrefix = effectiveCwd ? `cd ${shellEscape(effectiveCwd)} && ` : "";
 
   const piCommand = cdPrefix + envPrefix + parts.join(" ");
-  const command = `${piCommand}; echo '__SUBAGENT_DONE_'$?'__'`;
+  const command = withCompletionSentinel(piCommand, surface);
   const launchScriptName = `${(params.name || "subagent")
     .toLowerCase()
     .replace(/[^a-z0-9\s-]/g, "")
@@ -2212,7 +2235,10 @@ export default function subagentsExtension(pi: ExtensionAPI) {
         // operate where they did before.
         const resumeCdPrefix = loadout.cwd ? `cd ${shellEscape(loadout.cwd)} && ` : "";
 
-        const command = `${resumeCdPrefix}${resumeEnvPrefix}${parts.join(" ")}; echo '__SUBAGENT_DONE_'$?'__'`;
+        const command = withCompletionSentinel(
+          `${resumeCdPrefix}${resumeEnvPrefix}${parts.join(" ")}`,
+          surface,
+        );
         const launchScriptFile = join(
           artifactDir,
           "subagent-scripts",

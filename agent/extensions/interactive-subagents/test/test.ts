@@ -1344,6 +1344,15 @@ describe("subagent discovery", () => {
     });
   });
 
+  it("adds a delayed self-close fallback after emitting the completion sentinel", () => {
+    const command = testApi.withCompletionSentinel("pi --session child.jsonl", "%42");
+    assert.match(command, /pi --session child\.jsonl/);
+    assert.match(command, /__SUBAGENT_DONE_%s__/);
+    assert.match(command, /sleep 5; tmux kill-pane -t '%42'/);
+    assert.match(command, /exit "\$__subagent_exit"/);
+    assert.doesNotMatch(command, /&;/, "a background command must be followed by a newline, not a semicolon");
+  });
+
   it("buildPiPromptArgs inserts separator for artifact-backed launches with skills", () => {
     assert.deepEqual(
       testApi.buildPiPromptArgs({ effectiveSkills: "review,lint", taskDelivery: "artifact", taskArg: "@artifact.md" }),
