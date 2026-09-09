@@ -1,0 +1,425 @@
+{
+	"stateVersion": 5,
+	"exhaustedUntilByProvider": {},
+	"exhaustedUntilByModel": {},
+	"invalidatedByProvider": {},
+	"usageUntrustedUntilByProvider": {},
+	"usageByProvider": {
+		"openai-codex": {
+			"provider": "openai-codex",
+			"family": "codex",
+			"fetchedAt": 1788891362813,
+			"credentialHash": "9009cb4b4db9",
+			"plan": "plus",
+			"account": "untermenschh@protonmail.com",
+			"serviceable": true,
+			"primary": {
+				"usedPercent": 54,
+				"resetAt": 1788907209000,
+				"windowSeconds": 18000
+			},
+			"secondary": {
+				"usedPercent": 9,
+				"resetAt": 1789494009000,
+				"windowSeconds": 604800
+			},
+			"credits": {
+				"hasCredits": false,
+				"unlimited": false,
+				"balance": "0"
+			}
+		}
+	},
+	"codexModelCatalogByProvider": {
+		"openai-codex": {
+			"fetchedAt": 1788891663831,
+			"models": [
+				{
+					"id": "gpt-6-astra",
+					"name": "GPT-6-Astra",
+					"reasoning": true,
+					"thinkingLevelMap": {
+						"low": "low",
+						"medium": "medium",
+						"high": "high",
+						"xhigh": "xhigh",
+						"max": "max",
+						"minimal": "low"
+					},
+					"input": [
+						"text",
+						"image"
+					],
+					"cost": {
+						"input": 0,
+						"output": 0,
+						"cacheRead": 0,
+						"cacheWrite": 0
+					},
+					"contextWindow": 272000,
+					"maxTokens": 128000,
+					"priority": 1
+				},
+				{
+					"id": "gpt-5.6-sol",
+					"name": "GPT-5.6-Sol",
+					"reasoning": true,
+					"thinkingLevelMap": {
+						"low": "low",
+						"medium": "medium",
+						"high": "high",
+						"xhigh": "xhigh",
+						"max": "max",
+						"minimal": "low"
+					},
+					"input": [
+						"text",
+						"image"
+					],
+					"cost": {
+						"input": 0,
+						"output": 0,
+						"cacheRead": 0,
+						"cacheWrite": 0
+					},
+					"contextWindow": 272000,
+					"maxTokens": 128000,
+					"priority": 6
+				},
+				{
+					"id": "gpt-5.6-terra",
+					"name": "GPT-5.6-Terra",
+					"reasoning": true,
+					"thinkingLevelMap": {
+						"low": "low",
+						"medium": "medium",
+						"high": "high",
+						"xhigh": "xhigh",
+						"max": "max",
+						"minimal": "low"
+					},
+					"input": [
+						"text",
+						"image"
+					],
+					"cost": {
+						"input": 0,
+						"output": 0,
+						"cacheRead": 0,
+						"cacheWrite": 0
+					},
+					"contextWindow": 272000,
+					"maxTokens": 128000,
+					"priority": 7
+				},
+				{
+					"id": "gpt-5.6-luna",
+					"name": "GPT-5.6-Luna",
+					"reasoning": true,
+					"thinkingLevelMap": {
+						"low": "low",
+						"medium": "medium",
+						"high": "high",
+						"xhigh": "xhigh",
+						"max": "max",
+						"minimal": "low"
+					},
+					"input": [
+						"text",
+						"image"
+					],
+					"cost": {
+						"input": 0,
+						"output": 0,
+						"cacheRead": 0,
+						"cacheWrite": 0
+					},
+					"contextWindow": 272000,
+					"maxTokens": 128000,
+					"priority": 8
+				},
+				{
+					"id": "gpt-5.5",
+					"name": "GPT-5.5",
+					"reasoning": true,
+					"thinkingLevelMap": {
+						"low": "low",
+						"medium": "medium",
+						"high": "high",
+						"xhigh": "xhigh",
+						"minimal": "low"
+					},
+					"input": [
+						"text",
+						"image"
+					],
+					"cost": {
+						"input": 0,
+						"output": 0,
+						"cacheRead": 0,
+						"cacheWrite": 0
+					},
+					"contextWindow": 272000,
+					"maxTokens": 128000,
+					"priority": 12
+				}
+			]
+		},
+		"openai-codex-account-2": {
+			"fetchedAt": 1788891424620,
+			"models": [
+				{
+					"id": "gpt-6-astra",
+					"name": "GPT-6-Astra",
+					"reasoning": true,
+					"thinkingLevelMap": {
+						"low": "low",
+						"medium": "medium",
+						"high": "high",
+						"xhigh": "xhigh",
+						"max": "max",
+						"minimal": "low"
+					},
+					"input": [
+						"text",
+						"image"
+					],
+					"cost": {
+						"input": 0,
+						"output": 0,
+						"cacheRead": 0,
+						"cacheWrite": 0
+					},
+					"contextWindow": 272000,
+					"maxTokens": 128000,
+					"priority": 1
+				},
+				{
+					"id": "gpt-5.6-sol",
+					"name": "GPT-5.6-Sol",
+					"reasoning": true,
+					"thinkingLevelMap": {
+						"low": "low",
+						"medium": "medium",
+						"high": "high",
+						"xhigh": "xhigh",
+						"max": "max",
+						"minimal": "low"
+					},
+					"input": [
+						"text",
+						"image"
+					],
+					"cost": {
+						"input": 0,
+						"output": 0,
+						"cacheRead": 0,
+						"cacheWrite": 0
+					},
+					"contextWindow": 272000,
+					"maxTokens": 128000,
+					"priority": 6
+				},
+				{
+					"id": "gpt-5.6-terra",
+					"name": "GPT-5.6-Terra",
+					"reasoning": true,
+					"thinkingLevelMap": {
+						"low": "low",
+						"medium": "medium",
+						"high": "high",
+						"xhigh": "xhigh",
+						"max": "max",
+						"minimal": "low"
+					},
+					"input": [
+						"text",
+						"image"
+					],
+					"cost": {
+						"input": 0,
+						"output": 0,
+						"cacheRead": 0,
+						"cacheWrite": 0
+					},
+					"contextWindow": 272000,
+					"maxTokens": 128000,
+					"priority": 7
+				},
+				{
+					"id": "gpt-5.6-luna",
+					"name": "GPT-5.6-Luna",
+					"reasoning": true,
+					"thinkingLevelMap": {
+						"low": "low",
+						"medium": "medium",
+						"high": "high",
+						"xhigh": "xhigh",
+						"max": "max",
+						"minimal": "low"
+					},
+					"input": [
+						"text",
+						"image"
+					],
+					"cost": {
+						"input": 0,
+						"output": 0,
+						"cacheRead": 0,
+						"cacheWrite": 0
+					},
+					"contextWindow": 272000,
+					"maxTokens": 128000,
+					"priority": 8
+				},
+				{
+					"id": "gpt-5.5",
+					"name": "GPT-5.5",
+					"reasoning": true,
+					"thinkingLevelMap": {
+						"low": "low",
+						"medium": "medium",
+						"high": "high",
+						"xhigh": "xhigh",
+						"minimal": "low"
+					},
+					"input": [
+						"text",
+						"image"
+					],
+					"cost": {
+						"input": 0,
+						"output": 0,
+						"cacheRead": 0,
+						"cacheWrite": 0
+					},
+					"contextWindow": 272000,
+					"maxTokens": 128000,
+					"priority": 12
+				}
+			]
+		}
+	},
+	"lastUserModel": {
+		"provider": "openai-codex-account-2",
+		"id": "gpt-5.6-terra"
+	},
+	"lastUserThinkingLevel": "medium",
+	"lastModelByFamily": {
+		"openai-codex": "gpt-5.6-terra"
+	},
+	"lastProbeAtByProvider": {
+		"openai-codex-account-2": 1788889248484,
+		"openai-codex": 1788889248477
+	},
+	"lastSwitches": [
+		{
+			"from": "openai-codex/gpt-5.6-terra",
+			"to": "openai-codex-account-2/gpt-5.6-terra",
+			"reason": "assistant error: You have hit your ChatGPT usage limit (plus plan). Try again in ~162 min.",
+			"at": 1788889230075
+		},
+		{
+			"from": "openai-codex/gpt-5.6-terra",
+			"to": "openai-codex-account-2/gpt-5.6-terra",
+			"reason": "preflight: selected account unavailable",
+			"at": 1788872039726
+		},
+		{
+			"from": "openai-codex/gpt-5.6-terra",
+			"to": "openai-codex-account-2/gpt-5.6-terra",
+			"reason": "preflight: selected account unavailable",
+			"at": 1788871536703
+		},
+		{
+			"from": "openai-codex/gpt-5.6-terra",
+			"to": "openai-codex-account-2/gpt-5.6-terra",
+			"reason": "preflight: selected account unavailable",
+			"at": 1788870647072
+		},
+		{
+			"from": "openai-codex/gpt-5.6-terra",
+			"to": "openai-codex-account-2/gpt-5.6-terra",
+			"reason": "preflight: selected account unavailable",
+			"at": 1788869826591
+		},
+		{
+			"from": "openai-codex/gpt-5.6-terra",
+			"to": "openai-codex-account-2/gpt-5.6-terra",
+			"reason": "preflight: selected account unavailable",
+			"at": 1788869386894
+		},
+		{
+			"from": "openai-codex/gpt-5.6-terra",
+			"to": "openai-codex-account-2/gpt-5.6-terra",
+			"reason": "preflight: selected account unavailable",
+			"at": 1788869036927
+		},
+		{
+			"from": "openai-codex/gpt-5.6-terra",
+			"to": "openai-codex-account-2/gpt-5.6-terra",
+			"reason": "preflight: selected account unavailable",
+			"at": 1788868280678
+		},
+		{
+			"from": "openai-codex/gpt-5.6-terra",
+			"to": "openai-codex-account-2/gpt-5.6-terra",
+			"reason": "preflight: selected account unavailable",
+			"at": 1788867997607
+		},
+		{
+			"from": "openai-codex/gpt-5.6-terra",
+			"to": "openai-codex-account-2/gpt-5.6-terra",
+			"reason": "preflight: selected account unavailable",
+			"at": 1788867373810
+		},
+		{
+			"from": "openai-codex/gpt-5.6-terra",
+			"to": "openai-codex-account-2/gpt-5.6-terra",
+			"reason": "preflight: selected account unavailable",
+			"at": 1788866517873
+		},
+		{
+			"from": "openai-codex/gpt-5.6-terra",
+			"to": "openai-codex-account-2/gpt-5.6-terra",
+			"reason": "preflight: selected account unavailable",
+			"at": 1788866253103
+		},
+		{
+			"from": "openai-codex/gpt-5.6-terra",
+			"to": "openai-codex-account-2/gpt-5.6-terra",
+			"reason": "preflight: selected account unavailable",
+			"at": 1788865826196
+		},
+		{
+			"from": "openai-codex/gpt-5.6-terra",
+			"to": "openai-codex-account-2/gpt-5.6-terra",
+			"reason": "preflight: selected account unavailable",
+			"at": 1788865428155
+		},
+		{
+			"from": "openai-codex/gpt-5.6-terra",
+			"to": "openai-codex-account-2/gpt-5.6-terra",
+			"reason": "startup preflight: selected account unavailable",
+			"at": 1788865064603
+		},
+		{
+			"from": "openai-codex-account-2/gpt-5.6-terra",
+			"to": "openai-codex/gpt-5.6-terra",
+			"reason": "repeated temporary provider failure (2 consecutive): upstream request failed: fetch failed",
+			"at": 1788860871861
+		},
+		{
+			"from": "openai-codex/gpt-5.6-terra",
+			"to": "openai-codex-account-2/gpt-5.6-terra",
+			"reason": "repeated temporary provider failure (2 consecutive): fetch failed",
+			"at": 1788860838729
+		},
+		{
+			"from": "openai-codex/gpt-5.6-terra",
+			"to": "openai-codex-account-2/gpt-5.6-terra",
+			"reason": "manual /multi-account switch openai-codex-account-2",
+			"at": 1788353710545
+		}
+	]
+}

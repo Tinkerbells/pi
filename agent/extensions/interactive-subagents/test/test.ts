@@ -1348,7 +1348,9 @@ describe("subagent discovery", () => {
     const command = testApi.withCompletionSentinel("pi --session child.jsonl", "%42");
     assert.match(command, /pi --session child\.jsonl/);
     assert.match(command, /__SUBAGENT_DONE_%s__/);
-    assert.match(command, /sleep 5; tmux kill-pane -t '%42'/);
+    assert.match(command, /tmux run-shell -b/);
+    assert.match(command, /sleep 5; tmux kill-pane -t/);
+    assert.match(command, /%42/);
     assert.match(command, /exit "\$__subagent_exit"/);
     assert.doesNotMatch(command, /&;/, "a background command must be followed by a newline, not a semicolon");
   });

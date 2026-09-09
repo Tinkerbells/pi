@@ -510,17 +510,24 @@ function getShellReadyDelayMs(): number {
  * closes the pane itself. That assumption fails if the orchestrator is killed,
  * crashes, or its extension runtime is reloaded while the watcher is gone: Pi
  * exits normally, but the shell hosting its launch script remains as an orphan
- * tmux pane. Schedule a delayed, self-scoped fallback close so an exited child
- * can never leave a terminal behind indefinitely. The grace period leaves the
- * watcher enough time to read the sentinel and return the result first.
+ * tmux pane. Schedule a delayed fallback close through the tmux server, rather
+ * than as a background job of the child shell that is about to exit. The grace
+ * period leaves the watcher enough time to read the sentinel and return the result.
  */
 const ORPHAN_PANE_CLOSE_GRACE_SECONDS = 5;
 
 function withCompletionSentinel(command: string, surface: string): string {
   const escapedSurface = shellEscape(surface);
+  // The regular watcher can win this race and remove the pane first. That is
+  // success, not an error: make the fallback command exit cleanly in both cases
+  // so tmux does not show a noisy "returned 1" status notification.
+  const cleanupCommand =
+    `sleep ${ORPHAN_PANE_CLOSE_GRACE_SECONDS}; ` +
+    `tmux kill-pane -t ${escapedSurface} >/dev/null 2>&1 || true`;
   return [
     `${command}; __subagent_exit=$?; printf '__SUBAGENT_DONE_%s__\\n' "$__subagent_exit"`,
-    `(sleep ${ORPHAN_PANE_CLOSE_GRACE_SECONDS}; tmux kill-pane -t ${escapedSurface} >/dev/null 2>&1) &`,
+    // tmux owns this detached job, so it survives the child shell's exit.
+    `tmux run-shell -b ${shellEscape(cleanupCommand)}`,
     'exit "$__subagent_exit"',
   ].join("\n");
 }
@@ -891,10 +898,26 @@ function applySandboxToParts(
       const extPath = getToolExtensionPath(tool);
       if (extPath && existsSync(extPath)) extPaths.add(extPath);
     }
+    for (const extPath of loadout.extraExtensions ?? []) {
+      if (existsSync(extPath)) extPaths.add(extPath);
+    }
     for (const extPath of extPaths) {
       parts.push("-e", shellEscape(extPath));
     }
   }
+}
+
+/**
+ * Restricted subagents use --no-extensions, so explicitly restore the
+ * failover extension. This makes aliases such as openai-codex-account-2
+ * available inside the child and lets it rotate independently from its parent.
+ */
+function getMultiAccountExtensionPath(agentDir: string | null): string | null {
+  const candidates = [
+    ...(agentDir ? [join(agentDir, "npm", "node_modules", "pi-multi-account", "index.ts")] : []),
+    join(getAgentConfigDir(), "npm", "node_modules", "pi-multi-account", "index.ts"),
+  ];
+  return candidates.find((path) => existsSync(path)) ?? null;
 }
 
 function buildPiPromptArgs(params: {
@@ -1190,14 +1213,21 @@ function startWidgetRefresh() {
  */
 async function launchSubagent(
   params: typeof SubagentParams.static,
-  ctx: { sessionManager: { getSessionFile(): string | null; getSessionId(): string; getSessionDir(): string }; cwd: string },
+  ctx: {
+    sessionManager: { getSessionFile(): string | null; getSessionId(): string; getSessionDir(): string };
+    cwd: string;
+    model?: { provider: string; id: string };
+  },
   options?: { surface?: string },
 ): Promise<RunningSubagent> {
   const startTime = Date.now();
   const id = Math.random().toString(16).slice(2, 10);
 
   const agentDefs = params.agent ? loadAgentDefaults(params.agent) : null;
-  const effectiveModel = params.model ?? agentDefs?.model;
+  // Normal spawns inherit the orchestrator's exact account slot and model.
+  // An explicit tool argument still wins for deliberate one-off overrides.
+  const inheritedModel = ctx.model ? `${ctx.model.provider}/${ctx.model.id}` : undefined;
+  const effectiveModel = params.model ?? inheritedModel ?? agentDefs?.model;
   const effectiveTools = agentDefs?.tools;
   const effectiveSkills = agentDefs?.skills;
   const effectiveThinking = agentDefs?.thinking;
@@ -1361,6 +1391,9 @@ async function launchSubagent(
   // Snapshot the fully-resolved sandbox beside the session file so a later
   // `subagent_message({ name })` resume can replay the exact same
   // restriction instead of relaunching pi with all global extensions + tools.
+  const multiAccountExtension = toolAllowlist
+    ? getMultiAccountExtensionPath(resolvedAgentDir)
+    : null;
   const loadout: SubagentLoadout = {
     agent: params.agent ?? null,
     toolAllowlist,
@@ -1372,6 +1405,7 @@ async function launchSubagent(
     autoExit: agentDefs?.autoExit ?? false,
     cwd: effectiveCwd ?? null,
     agentDir: resolvedAgentDir,
+    ...(multiAccountExtension ? { extraExtensions: [multiAccountExtension] } : {}),
   };
   writeSubagentLoadout(subagentSessionFile, loadout);
 

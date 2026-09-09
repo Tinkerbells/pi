@@ -1,11 +1,12 @@
 {
-  "defaultModel": "qwen3.6:latest",
-  "defaultProvider": "ollama",
-  "defaultThinkingLevel": "high",
+  "defaultModel": "gpt-5.6-terra",
+  "defaultProvider": "openai-codex",
+  "defaultThinkingLevel": "medium",
   "enabledModels": [
-    "openai-codex/gpt-5.6-sol"
+    "openai-codex/gpt-5.6-sol",
+    "openai-codex/gpt-5.6-terra"
   ],
-  "lastChangelogVersion": "0.84.3",
+  "lastChangelogVersion": "0.85.1",
   "subagents": {
     "defaultModel": "openai-codex/gpt-5.6-luna",
     "defaultProvider": "openai-codex",
@@ -45,15 +46,17 @@
   },
   "packages": [
     "npm:@houndmcp/hound-mcp-pi",
-    "npm:pi-mcp-adapter@2.15.0",
-    "npm:pi-figma-remote-auth@0.1.1",
+    "npm:pi-mcp-adapter",
+    "npm:pi-figma-remote-auth",
     {
       "extensions": [],
       "source": "npm:@ollama/pi-web-search"
-    }
+    },
+    "npm:pi-multi-account",
+    "npm:@smoose/pi-themes"
   ],
   "skills": [
-    "/Users/tinkerbells/work/tripster/ai-woodman-bot/core/skills"
+    "/home/voiduser/work/tripster/skills"
   ],
-  "theme": "dark"
+  "theme": "onedark-dark"
 }
