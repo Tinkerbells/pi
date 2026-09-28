@@ -1,46 +1,46 @@
 {
-  "defaultModel": "gpt-5.6-terra",
-  "defaultProvider": "openai-codex",
+  "defaultModel": "claude-bridge/claude-sonnet-5",
+  "defaultProvider": "claude-bridge",
   "defaultThinkingLevel": "medium",
   "enabledModels": [
-    "openai-codex/gpt-5.6-sol",
-    "openai-codex/gpt-5.6-terra"
+    "claude-bridge/claude-sonnet-5",
+    "claude-bridge/claude-opus-5-5"
   ],
   "lastChangelogVersion": "0.85.1",
   "subagents": {
-    "defaultModel": "openai-codex/gpt-5.6-luna",
-    "defaultProvider": "openai-codex",
+    "defaultModel": "claude-bridge/claude-sonnet-5",
+    "defaultProvider": "claude-bridge",
     "agentOverrides": {
       "delegate": {
-        "model": "openai-codex/gpt-5.6-luna",
-        "thinking": "max"
+        "model": "claude-bridge/claude-sonnet-5",
+        "thinking": "medium"
       },
       "oracle": {
-        "model": "openai-codex/gpt-5.6-sol",
+        "model": "claude-bridge/claude-opus-5-5",
         "thinking": "high"
       },
       "researcher": {
-        "model": "openai-codex/gpt-5.6-luna",
-        "thinking": "max"
+        "model": "claude-bridge/claude-sonnet-5",
+        "thinking": "medium"
       },
       "reviewer": {
-        "model": "openai-codex/gpt-5.6-luna",
-        "thinking": "max"
+        "model": "claude-bridge/claude-opus-5-5",
+        "thinking": "high"
       },
       "scout": {
-        "model": "openai-codex/gpt-5.6-luna",
+        "model": "claude-bridge/claude-sonnet-5",
         "thinking": "low"
       },
       "worker": {
-        "model": "openai-codex/gpt-5.6-luna",
-        "thinking": "max"
+        "model": "claude-bridge/claude-sonnet-5",
+        "thinking": "medium"
       }
     },
     "modelScope": {
       "enforce": true,
       "strict": true,
       "allow": [
-        "openai-codex/*"
+        "claude-bridge/*"
       ]
     }
   },
@@ -53,7 +53,8 @@
       "source": "npm:@ollama/pi-web-search"
     },
     "npm:pi-multi-account",
-    "npm:@smoose/pi-themes"
+    "npm:@smoose/pi-themes",
+    "npm:pi-claude-bridge"
   ],
   "skills": [
     "/home/voiduser/work/tripster/skills"

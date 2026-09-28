@@ -11,8 +11,8 @@
 	"includeCursor": true,
 	"neverFailoverProviders": [],
 	"providerOrder": [
+		"claude-bridge",
 		"anthropic",
-		"openai-codex",
 		"kimi-coding",
 		"cursor",
 		"qwen",

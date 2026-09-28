@@ -5,314 +5,40 @@
 	"invalidatedByProvider": {},
 	"usageUntrustedUntilByProvider": {},
 	"usageByProvider": {
-		"openai-codex": {
-			"provider": "openai-codex",
-			"family": "codex",
-			"fetchedAt": 1788891362813,
-			"credentialHash": "9009cb4b4db9",
-			"plan": "plus",
-			"account": "untermenschh@protonmail.com",
-			"serviceable": true,
+		"anthropic-account-2": {
+			"provider": "anthropic-account-2",
+			"family": "anthropic",
+			"fetchedAt": 1790589643278,
+			"credentialHash": "cdbe0edf9f1a",
 			"primary": {
-				"usedPercent": 54,
-				"resetAt": 1788907209000,
+				"usedPercent": 4,
+				"resetAt": 1790606400353,
 				"windowSeconds": 18000
 			},
 			"secondary": {
-				"usedPercent": 9,
-				"resetAt": 1789494009000,
+				"usedPercent": 0,
+				"resetAt": 1790668800353,
 				"windowSeconds": 604800
-			},
-			"credits": {
-				"hasCredits": false,
-				"unlimited": false,
-				"balance": "0"
 			}
 		}
 	},
-	"codexModelCatalogByProvider": {
-		"openai-codex": {
-			"fetchedAt": 1788891663831,
-			"models": [
-				{
-					"id": "gpt-6-astra",
-					"name": "GPT-6-Astra",
-					"reasoning": true,
-					"thinkingLevelMap": {
-						"low": "low",
-						"medium": "medium",
-						"high": "high",
-						"xhigh": "xhigh",
-						"max": "max",
-						"minimal": "low"
-					},
-					"input": [
-						"text",
-						"image"
-					],
-					"cost": {
-						"input": 0,
-						"output": 0,
-						"cacheRead": 0,
-						"cacheWrite": 0
-					},
-					"contextWindow": 272000,
-					"maxTokens": 128000,
-					"priority": 1
-				},
-				{
-					"id": "gpt-5.6-sol",
-					"name": "GPT-5.6-Sol",
-					"reasoning": true,
-					"thinkingLevelMap": {
-						"low": "low",
-						"medium": "medium",
-						"high": "high",
-						"xhigh": "xhigh",
-						"max": "max",
-						"minimal": "low"
-					},
-					"input": [
-						"text",
-						"image"
-					],
-					"cost": {
-						"input": 0,
-						"output": 0,
-						"cacheRead": 0,
-						"cacheWrite": 0
-					},
-					"contextWindow": 272000,
-					"maxTokens": 128000,
-					"priority": 6
-				},
-				{
-					"id": "gpt-5.6-terra",
-					"name": "GPT-5.6-Terra",
-					"reasoning": true,
-					"thinkingLevelMap": {
-						"low": "low",
-						"medium": "medium",
-						"high": "high",
-						"xhigh": "xhigh",
-						"max": "max",
-						"minimal": "low"
-					},
-					"input": [
-						"text",
-						"image"
-					],
-					"cost": {
-						"input": 0,
-						"output": 0,
-						"cacheRead": 0,
-						"cacheWrite": 0
-					},
-					"contextWindow": 272000,
-					"maxTokens": 128000,
-					"priority": 7
-				},
-				{
-					"id": "gpt-5.6-luna",
-					"name": "GPT-5.6-Luna",
-					"reasoning": true,
-					"thinkingLevelMap": {
-						"low": "low",
-						"medium": "medium",
-						"high": "high",
-						"xhigh": "xhigh",
-						"max": "max",
-						"minimal": "low"
-					},
-					"input": [
-						"text",
-						"image"
-					],
-					"cost": {
-						"input": 0,
-						"output": 0,
-						"cacheRead": 0,
-						"cacheWrite": 0
-					},
-					"contextWindow": 272000,
-					"maxTokens": 128000,
-					"priority": 8
-				},
-				{
-					"id": "gpt-5.5",
-					"name": "GPT-5.5",
-					"reasoning": true,
-					"thinkingLevelMap": {
-						"low": "low",
-						"medium": "medium",
-						"high": "high",
-						"xhigh": "xhigh",
-						"minimal": "low"
-					},
-					"input": [
-						"text",
-						"image"
-					],
-					"cost": {
-						"input": 0,
-						"output": 0,
-						"cacheRead": 0,
-						"cacheWrite": 0
-					},
-					"contextWindow": 272000,
-					"maxTokens": 128000,
-					"priority": 12
-				}
-			]
-		},
-		"openai-codex-account-2": {
-			"fetchedAt": 1788891424620,
-			"models": [
-				{
-					"id": "gpt-6-astra",
-					"name": "GPT-6-Astra",
-					"reasoning": true,
-					"thinkingLevelMap": {
-						"low": "low",
-						"medium": "medium",
-						"high": "high",
-						"xhigh": "xhigh",
-						"max": "max",
-						"minimal": "low"
-					},
-					"input": [
-						"text",
-						"image"
-					],
-					"cost": {
-						"input": 0,
-						"output": 0,
-						"cacheRead": 0,
-						"cacheWrite": 0
-					},
-					"contextWindow": 272000,
-					"maxTokens": 128000,
-					"priority": 1
-				},
-				{
-					"id": "gpt-5.6-sol",
-					"name": "GPT-5.6-Sol",
-					"reasoning": true,
-					"thinkingLevelMap": {
-						"low": "low",
-						"medium": "medium",
-						"high": "high",
-						"xhigh": "xhigh",
-						"max": "max",
-						"minimal": "low"
-					},
-					"input": [
-						"text",
-						"image"
-					],
-					"cost": {
-						"input": 0,
-						"output": 0,
-						"cacheRead": 0,
-						"cacheWrite": 0
-					},
-					"contextWindow": 272000,
-					"maxTokens": 128000,
-					"priority": 6
-				},
-				{
-					"id": "gpt-5.6-terra",
-					"name": "GPT-5.6-Terra",
-					"reasoning": true,
-					"thinkingLevelMap": {
-						"low": "low",
-						"medium": "medium",
-						"high": "high",
-						"xhigh": "xhigh",
-						"max": "max",
-						"minimal": "low"
-					},
-					"input": [
-						"text",
-						"image"
-					],
-					"cost": {
-						"input": 0,
-						"output": 0,
-						"cacheRead": 0,
-						"cacheWrite": 0
-					},
-					"contextWindow": 272000,
-					"maxTokens": 128000,
-					"priority": 7
-				},
-				{
-					"id": "gpt-5.6-luna",
-					"name": "GPT-5.6-Luna",
-					"reasoning": true,
-					"thinkingLevelMap": {
-						"low": "low",
-						"medium": "medium",
-						"high": "high",
-						"xhigh": "xhigh",
-						"max": "max",
-						"minimal": "low"
-					},
-					"input": [
-						"text",
-						"image"
-					],
-					"cost": {
-						"input": 0,
-						"output": 0,
-						"cacheRead": 0,
-						"cacheWrite": 0
-					},
-					"contextWindow": 272000,
-					"maxTokens": 128000,
-					"priority": 8
-				},
-				{
-					"id": "gpt-5.5",
-					"name": "GPT-5.5",
-					"reasoning": true,
-					"thinkingLevelMap": {
-						"low": "low",
-						"medium": "medium",
-						"high": "high",
-						"xhigh": "xhigh",
-						"minimal": "low"
-					},
-					"input": [
-						"text",
-						"image"
-					],
-					"cost": {
-						"input": 0,
-						"output": 0,
-						"cacheRead": 0,
-						"cacheWrite": 0
-					},
-					"contextWindow": 272000,
-					"maxTokens": 128000,
-					"priority": 12
-				}
-			]
-		}
-	},
+	"codexModelCatalogByProvider": {},
 	"lastUserModel": {
-		"provider": "openai-codex-account-2",
-		"id": "gpt-5.6-terra"
+		"provider": "claude-bridge",
+		"id": "claude-sonnet-5"
 	},
 	"lastUserThinkingLevel": "medium",
 	"lastModelByFamily": {
-		"openai-codex": "gpt-5.6-terra"
+		"openai-codex": "gpt-5.6-sol"
 	},
-	"lastProbeAtByProvider": {
-		"openai-codex-account-2": 1788889248484,
-		"openai-codex": 1788889248477
-	},
+	"lastProbeAtByProvider": {},
 	"lastSwitches": [
+		{
+			"from": "openai-codex/gpt-5.6-sol",
+			"to": "openai-codex-account-2/gpt-5.6-sol",
+			"reason": "transient auth failure: Encountered invalidated oauth token for user, failing request\nWebSocket error",
+			"at": 1790588503479
+		},
 		{
 			"from": "openai-codex/gpt-5.6-terra",
 			"to": "openai-codex-account-2/gpt-5.6-terra",
