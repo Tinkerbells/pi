@@ -121,17 +121,24 @@ export default function (pi: ExtensionAPI) {
 	}
 
 	function renderStatus(ctx: any) {
-		if (!isClaudeBridge(ctx)) {
-			clearStatus(ctx);
-			return;
-		}
-		if (lastSnapshot) {
-			ctx.ui.setStatus(
-				"claude-bridge-usage",
-				claudeOrange(`Claude 5h ${lastSnapshot.fiveHourPct}% · 7d ${lastSnapshot.sevenDayPct}%`),
-			);
-		} else if (lastError) {
-			ctx.ui.setStatus("claude-bridge-usage", `Claude usage: ${lastError}`);
+		// ctx can go stale (session replaced/reloaded) between an async refresh()
+		// starting and finishing — swallow that instead of letting it become an
+		// uncaught exception that kills the process.
+		try {
+			if (!isClaudeBridge(ctx)) {
+				clearStatus(ctx);
+				return;
+			}
+			if (lastSnapshot) {
+				ctx.ui.setStatus(
+					"claude-bridge-usage",
+					claudeOrange(`Claude 5h ${lastSnapshot.fiveHourPct}% · 7d ${lastSnapshot.sevenDayPct}%`),
+				);
+			} else if (lastError) {
+				ctx.ui.setStatus("claude-bridge-usage", `Claude usage: ${lastError}`);
+			}
+		} catch {
+			// stale ctx — nothing to do.
 		}
 	}
 
@@ -167,12 +174,32 @@ export default function (pi: ExtensionAPI) {
 	});
 
 	pi.on("session_start", (_event, ctx) => {
+		if (timer) {
+			clearInterval(timer);
+			timer = undefined;
+		}
 		if (!ctx.hasUI) return;
-		refresh(ctx, false);
-		timer = setInterval(() => refresh(ctx, false), REFRESH_MS);
+		refresh(ctx, false).catch(() => {
+			// ctx went stale mid-refresh — ignore.
+		});
+		timer = setInterval(() => {
+			refresh(ctx, false).catch(() => {
+				// ctx is stale (session was replaced/reloaded) — stop polling it.
+				if (timer) {
+					clearInterval(timer);
+					timer = undefined;
+				}
+			});
+		}, REFRESH_MS);
 	});
 
 	pi.on("model_select", (_event, ctx) => {
-		setTimeout(() => renderStatus(ctx), 0);
+		setTimeout(() => {
+			try {
+				renderStatus(ctx);
+			} catch {
+				// ctx is stale (session was replaced/reloaded) — ignore.
+			}
+		}, 0);
 	});
 }
